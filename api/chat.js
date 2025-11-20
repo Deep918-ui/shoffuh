@@ -19,9 +19,13 @@ export default async function handler(req, res) {
 
     const data = await response.json();
 
-    res.status(200).json({
-      reply: data?.choices?.[0]?.message?.content || null
-    });
+    let reply =
+      data?.choices?.[0]?.message?.content ||   // normal reply
+      data?.choices?.[0]?.text ||               // alt reply (text models)
+      data?.choices?.[0]?.delta?.content ||     // streaming-type reply
+      null;
+
+    res.status(200).json({ reply });
 
   } catch (e) {
     res.status(500).json({ reply: null, error: e.toString() });
