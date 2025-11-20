@@ -2,22 +2,28 @@ export default async function handler(req, res) {
   try {
     const { message, system } = req.body;
 
-    if (!message) {
-      return res.status(400).json({ error: "No message provided" });
-    }
-
-    // Proxy ko call karo
-    const response = await fetch(`${process.env.VERCEL_URL}/api/proxy`, {
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message, system })
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.OPENAI_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-4o-mini",
+        messages: [
+          { role: "system", content: system || "You are a sister AI." },
+          { role: "user", content: message }
+        ]
+      })
     });
 
     const data = await response.json();
 
-    res.status(200).json(data);
+    res.status(200).json({
+      reply: data?.choices?.[0]?.message?.content || null
+    });
 
-  } catch (error) {
-    res.status(500).json({ error: error.toString() });
+  } catch (e) {
+    res.status(500).json({ reply: null, error: e.toString() });
   }
-      }
+}
