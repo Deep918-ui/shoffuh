@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday Shofu</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        overflow: hidden;
+        font-family: 'Inter', sans-serif;
+        color: white;
+        text-align: center;
+    }
+
+    canvas {
+        position: absolute;
+        inset: 0;
+        width: 100vw;
+        height: 100vh;
+    }
+
+    /* TEXT */
+    #title {
+        position: absolute;
+        top: 35%;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 32px;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-shadow: 0 0 12px white, 0 0 25px rgba(255,255,255,0.7);
+        opacity: 0;
+        white-space: nowrap;
+        z-index: 5;
+    }
+
+    /* NEXT BUTTON */
+    #nextBtn {
+        position: absolute;
+        bottom: 8%;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 14px 28px;
+        background: white;
+        color: black;
+        font-size: 18px;
+        border-radius: 10px;
+        border: none;
+        font-weight: 700;
+        display: none;
+        cursor: pointer;
+        box-shadow: 0 0 20px white;
+        z-index: 5;
+    }
+</style>
+</head>
+
+<body>
+
+<!-- FIREWORK CANVAS -->
+<canvas id="fireworksCanvas"></canvas>
+
+<!-- TITLE -->
+<div id="title"></div>
+
+<!-- NEXT BUTTON -->
+<button id="nextBtn" onclick="location.href='page5.html'">Next →</button>
+
+<script>
+/* -------------------- FIREWORKS (NO SOUND) -------------------- */
+const canvas = document.getElementById('fireworksCanvas');
+const ctx = canvas.getContext('2d');
+
+let cw = window.innerWidth;
+let ch = window.innerHeight;
+canvas.width = cw;
+canvas.height = ch;
+
+let fireworks = [];
+let particles = [];
+let hue = 120;
+
+function random(min, max) {
+    return Math.random() * (max - min) + min;
+}
+
+function distance(x1, y1, x2, y2) {
+    return Math.sqrt((x1 - x2)**2 + (y1 - y2)**2);
+}
+
+class Particle {
+    constructor(x, y, hue) {
+        this.x = x;
+        this.y = y;
+        this.coords = [];
+        this.coordCount = 5;
+        while(this.coordCount--) this.coords.push([this.x, this.y]);
+        this.angle = random(0, Math.PI * 2);
+        this.speed = random(1, 10);
+        this.friction = 0.92;
+        this.gravity = 1;
+        this.hue = hue;
+        this.brightness = random(50,80);
+        this.alpha = 1;
+        this.decay = random(0.015, 0.03);
+    }
+
+    update(){
+        this.coords.pop();
+        this.coords.unshift([this.x, this.y]);
+        this.speed *= this.friction;
+        this.x += Math.cos(this.angle) * this.speed;
+        this.y += Math.sin(this.angle) * this.speed + this.gravity;
+        this.alpha -= this.decay;
+        return this.alpha > 0;
+    }
+
+    draw(){
+        ctx.beginPath();
+        ctx.moveTo(this.coords[this.coords.length-1][0], this.coords[this.coords.length-1][1]);
+        ctx.lineTo(this.x, this.y);
+        ctx.strokeStyle = `hsla(${this.hue},100%,${this.brightness}%,${this.alpha})`;
+        ctx.stroke();
+    }
+}
+
+class Firework {
+    constructor(x, y, tx, ty){
+        this.x = x;
+        this.y = y;
+        this.startX = x;
+        this.startY = y;
+        this.targetX = tx;
+        this.targetY = ty;
+        this.distanceToTarget = distance(x,y,tx,ty);
+        this.distanceTraveled = 0;
+        this.coords = [];
+        this.coordCount = 3;
+        while(this.coordCount--) this.coords.push([this.x, this.y]);
+        this.angle = Math.atan2(ty-y, tx-x);
+        this.speed = 2;
+        this.acceleration = 1.04;
+        this.hue = hue;
+    }
+
+    update(){
+        this.coords.pop();
+        this.coords.unshift([this.x, this.y]);
+        this.speed *= this.acceleration;
+        const vx = Math.cos(this.angle) * this.speed;
+        const vy = Math.sin(this.angle) * this.speed;
+
+        this.distanceTraveled = distance(this.startX,this.startY,this.x+vx,this.y+vy);
+
+        if(this.distanceTraveled >= this.distanceToTarget){
+            createParticles(this.targetX, this.targetY);
+            return false;
+        } else {
+            this.x += vx;
+            this.y += vy;
+            return true;
+        }
+    }
+
+    draw(){
+        ctx.beginPath();
+        ctx.moveTo(this.coords[this.coords.length-1][0],this.coords[this.coords.length-1][1]);
+        ctx.lineTo(this.x, this.y);
+        ctx.strokeStyle = `hsl(${this.hue},100%,60%)`;
+        ctx.stroke();
+    }
+}
+
+function createParticles(x, y){
+    let count = 40;
+    for(let i=0;i<count;i++){
+        particles.push(new Particle(x,y,hue+random(-20,20)));
+    }
+}
+
+function loop(){
+    requestAnimationFrame(loop);
+    hue+=0.5;
+
+    ctx.globalCompositeOperation="destination-out";
+    ctx.fillStyle="rgba(0,0,0,0.5)";
+    ctx.fillRect(0,0,cw,ch);
+
+    ctx.globalCompositeOperation="lighter";
+
+    // fireworks
+    for(let i=fireworks.length-1;i>=0;i--){
+        if(!fireworks[i].update()){
+            fireworks.splice(i,1);
+        } else {
+            fireworks[i].draw();
+        }
+    }
+
+    // particles
+    for(let i=particles.length-1;i>=0;i--){
+        if(!particles[i].update()){
+            particles.splice(i,1);
+        } else {
+            particles[i].draw();
+        }
+    }
+}
+
+setInterval(()=>{
+    fireworks.push(new Firework(cw/2, ch, random(0,cw), random(0,ch/2)));
+},200);
+
+loop();
+
+/* -------------------- TEXT TYPEWRITER -------------------- */
+const title = document.getElementById("title");
+const nextBtn = document.getElementById("nextBtn");
+const msg = "ʜᴀᴘᴘʏ ʙɪʀᴛʜᴅᴀʏ sʜᴏғᴜ";
+
+let i = 0;
+
+function typeWriter(){
+    if(i < msg.length){
+        title.style.opacity = 1;
+        title.textContent += msg.charAt(i);
+        i++;
+        setTimeout(typeWriter, 70);
+    } else {
+        setTimeout(()=>{ nextBtn.style.display = "block"; }, 1500);
+    }
+}
+
+setTimeout(typeWriter, 600); // start after first firework burst
+</script>
+
+</body>
+</html>

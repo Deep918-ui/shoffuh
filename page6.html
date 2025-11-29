@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Song For You</title>
+
+<style>
+    body{
+        margin:0;
+        padding:0;
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        flex-direction:column;
+        background: linear-gradient(180deg,#05000a,#0a0015,#000);
+        font-family: "Poppins", sans-serif;
+        color:white;
+        text-align:center;
+        overflow:hidden;
+    }
+
+    h1{
+        font-size:28px;
+        margin-bottom:25px;
+        text-shadow:0 0 10px #ff69fbaa;
+    }
+
+    .play-btn{
+        padding:15px 28px;
+        background:#ff2ea6;
+        border:none;
+        border-radius:12px;
+        color:white;
+        font-size:20px;
+        font-weight:600;
+        cursor:pointer;
+        box-shadow:0 0 18px #ff2ea699;
+        transition:0.2s;
+    }
+    .play-btn:hover{
+        transform:scale(1.05);
+    }
+
+    .credit{
+        position:absolute;
+        bottom:20px;
+        font-size:14px;
+        opacity:0.7;
+        letter-spacing:1px;
+    }
+</style>
+</head>
+<body>
+
+<h1>A Song For You 💗</h1>
+
+<button class="play-btn" id="playBtn">Tap to Listen 🎧</button>
+
+<!-- SONG -->
+<audio id="song">
+    <source src="https://raw.githubusercontent.com/Deep918-ui/Foryohhh/102f5a1898abb931083c62103b5d456fee7162f5/%23koi_mil_gaya%23jadu_%23mannatbabyvlog_%23cute_%23mannat_%23sorts(720p).mp4" type="audio/mp4">
+</audio>
+
+<div class="credit">Made by <b>Deep_Editss</b></div>
+
+<script>
+const btn = document.getElementById("playBtn");
+const audio = document.getElementById("song");
+
+btn.addEventListener("click", ()=>{
+    audio.play();
+    btn.innerText = "Playing... 🎶";
+    btn.disabled = true;
+    btn.style.opacity = "0.6";
+});
+</script>
+
+</body>
+</html>

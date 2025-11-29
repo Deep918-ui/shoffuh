@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Birthday Surprise</title>
+  <style>
+    body {
+      margin:0; padding:0;
+      background:#000;
+      color:#fff;
+      font-family: "Poppins", sans-serif;
+      display:flex; justify-content:center; align-items:center;
+      height:100vh; overflow:hidden;
+    }
+    .container {
+      text-align:center;
+      position: relative;
+      z-index: 2;
+    }
+    .tap-btn {
+      padding: 14px 24px;
+      background: #ff2e90;
+      border: none; border-radius: 10px;
+      color: white; font-size: 18px;
+      font-weight:600; cursor:pointer;
+      box-shadow:0 0 20px #ff2e90aa;
+    }
+    .letter {
+      max-width: 80%;
+      margin: 20px auto 0;
+      text-align: left;
+      line-height: 1.6;
+      font-size: 18px;
+      white-space: pre-line;
+      opacity: 0;
+    }
+    .next-btn {
+      display:none;
+      margin-top: 20px;
+      padding: 12px 20px;
+      background: #4eff8b;
+      border: none; border-radius: 10px;
+      font-size: 18px; font-weight:700;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <button class="tap-btn" id="openBtn">Open 🎉</button>
+  <div class="letter" id="letter"></div>
+  <button class="next-btn" id="nextBtn">Next →</button>
+</div>
+
+<audio id="song" preload="auto">
+  <source src="https://raw.githubusercontent.com/Deep918-ui/Foryohhh/02d69de57be3f8b2e9a3a6d09b318c22d9883dd0/Chikni_Chameli__kashu_X_nishi_dance_cover___%23dance(720p).mp4" type="audio/mp4">
+  <!-- optional fallback -->
+</audio>
+
+<script>
+  const openBtn = document.getElementById('openBtn');
+  const letter = document.getElementById('letter');
+  const nextBtn = document.getElementById('nextBtn');
+  const song = document.getElementById('song');
+
+  const message = `Happy birthday shofu 🎉  
+I hope you have a blast today!  
+May your dreams come true and life be full of happiness.  
+Enjoy every bit of your day!
+bhai itna kuch kara hu ab party kabtak dega 
+bhaii batadea jaldiiiiii`;
+
+  openBtn.addEventListener('click', () => {
+    openBtn.style.display = 'none';
+
+    // play audio immediately
+    song.play().catch(err => console.warn("Audio play failed:", err));
+
+    // show letter & type text
+    letter.style.opacity = 1;
+    let i = 0;
+    function type() {
+      if (i < message.length) {
+        letter.textContent += message.charAt(i);
+        i++;
+        setTimeout(type, 30); // typing speed (fast)
+      } else {
+        nextBtn.style.display = 'inline-block';
+      }
+    }
+    type();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    // redirect or whatever next page
+    window.location.href = 'page4.html';
+  });
+</script>
+
+</body>
+</html>

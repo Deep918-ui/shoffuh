@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Birthday • Index</title>
+
+<style>
+    body{
+        margin:0;
+        padding:0;
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        flex-direction:column;
+        background: linear-gradient(180deg,#05000a,#0a0015,#000);
+        font-family: "Poppins", sans-serif;
+        overflow:hidden;
+        color:white;
+    }
+
+    .card{
+        text-align:center;
+        padding:24px;
+        width:90%;
+        max-width:450px;
+        background:rgba(255,255,255,0.05);
+        border-radius:14px;
+        box-shadow:0 0 30px rgba(0,0,0,0.6);
+        backdrop-filter:blur(6px);
+        position:relative;
+        animation: fadeIn 1s ease forwards;
+    }
+
+    @keyframes fadeIn{
+        from{opacity:0; transform:translateY(30px);}
+        to{opacity:1; transform:translateY(0);}
+    }
+
+    .gif-box{
+        width:100%;
+        display:flex;
+        justify-content:center;
+        margin-bottom:12px;
+    }
+
+    .gif-box img{
+        width:120px;
+        height:auto;
+        border-radius:10px;
+        box-shadow:0 0 20px rgba(255,255,255,0.2);
+    }
+
+    h2{
+        margin:0;
+        font-size:20px;
+        line-height:1.5;
+    }
+
+    .btn{
+        width:100%;
+        padding:14px;
+        margin-top:14px;
+        border:none;
+        border-radius:10px;
+        font-size:18px;
+        font-weight:600;
+        cursor:pointer;
+        transition:0.2s;
+    }
+
+    .yes{
+        background:#4eff8b;
+        color:#000;
+        box-shadow:0 0 15px #4eff8b90;
+    }
+
+    .yes:hover{ transform:scale(1.03); }
+
+    .no{
+        background:#ff2e5f;
+        color:white;
+        box-shadow:0 0 15px #ff2e5f90;
+        position:relative;
+    }
+
+    /* shake animation */
+    @keyframes shake{
+        0%,100%{transform:translateX(0);}
+        25%{transform:translateX(-6px);}
+        50%{transform:translateX(6px);}
+        75%{transform:translateX(-4px);}
+    }
+
+    /* blast */
+    @keyframes blast{
+        0%{opacity:1; transform:scale(1);}
+        100%{opacity:0; transform:scale(2.5) rotate(30deg);}
+    }
+
+    /* popup */
+    .popup{
+        position:fixed;
+        bottom:30px;
+        left:50%;
+        transform:translateX(-50%);
+        background:#ff2e5f;
+        color:white;
+        padding:12px 18px;
+        border-radius:10px;
+        font-size:16px;
+        font-weight:600;
+        box-shadow:0 0 20px #ff2e5f99;
+        display:none;
+        animation: fadeUp 0.4s ease forwards;
+    }
+
+    @keyframes fadeUp{
+        from{opacity:0; transform:translate(-50%,20px);}
+        to{opacity:1; transform:translate(-50%,0);}
+    }
+</style>
+</head>
+<body>
+
+<div class="card">
+
+    <div class="gif-box">
+        <img src="https://github.com/Deep918-ui/shoffuh/blob/81c270e707d21482c123033098a87d7af123faa4/giphy.gif?raw=true" />
+    </div>
+
+    <h2>Bro aj kuch special day hai kya?<br>Sayd aj kuch special hai...</h2>
+
+    <button class="btn yes" onclick="location.href='page2.html'">Haan</button>
+
+    <button class="btn no" id="noBtn">Nahi to</button>
+
+</div>
+
+<div class="popup" id="popup">Sach mai kya??</div>
+
+<script>
+const noBtn = document.getElementById("noBtn");
+const popup = document.getElementById("popup");
+
+noBtn.addEventListener("click", () => {
+    // show popup
+    popup.style.display = "block";
+
+    // shake animation
+    noBtn.style.animation = "shake 0.4s";
+
+    // blast and remove button
+    setTimeout(() => {
+        noBtn.style.animation = "blast 0.6s forwards";
+    }, 400);
+});
+</script>
+
+
+
+
+<div style="
+    position: fixed;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 15px;
+    font-family: 'Poppins', sans-serif;
+    color: #ffffff;
+    text-shadow: 0 0 12px rgba(255, 0, 200, 0.6);
+">
+    Made by Deep Edits
+</div>
+
+</body>
+</html>
+
